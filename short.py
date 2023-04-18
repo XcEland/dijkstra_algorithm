@@ -72,9 +72,27 @@ def dijkstra(graph, start, end):
 root = tk.Tk()
 root.title("Shortest Path Finder")
 
+# Set the window size and position
+root.geometry("800x600")
+root.resizable(width=False, height=False)
+
+# Set the background color
+root.configure(bg="lightblue")
+
+# Define the font and size for the text and buttons
+font_style = ("Arial", 18)
+
+# Add a header with the author's name
+header_label = tk.Label(root, text="Find the Shortest Path Between Cities", font=("Arial", 24), bg="white")
+header_label.pack(pady=20)
+
+author_label = tk.Label(root, text="by Mcdonald Mpofu R199178D", font=("Arial", 18), bg="white")
+author_label.pack()
+
 # Create the label and dropdown menu for the source city
 source_label = tk.Label(root, text="Source City:")
 source_label.pack(side=tk.LEFT, padx=10, pady=10)
+
 
 source_var = tk.StringVar(root)
 source_var.set('Harare')  # Set the default value to Harare
@@ -82,15 +100,18 @@ source_var.set('Harare')  # Set the default value to Harare
 source_menu = tk.OptionMenu(root, source_var, *city_names.values())
 source_menu.pack(side=tk.LEFT, padx=10, pady=10)
 
+
 # Create the label and dropdown menu for the destination city
 dest_label = tk.Label(root, text="Destination City:")
 dest_label.pack(side=tk.LEFT, padx=10, pady=10)
+
 
 dest_var = tk.StringVar(root)
 dest_var.set('Kwekwe')  # Set the default value to Kwekwe
 
 dest_menu = tk.OptionMenu(root, dest_var, *city_names.values())
 dest_menu.pack(side=tk.LEFT, padx=10, pady=10)
+
 
 # Create the button to find the shortest path
 def find_shortest_path():
@@ -118,5 +139,15 @@ find_button.pack(side=tk.LEFT, padx=10, pady=10)
 # Create the label to display the result
 result_label = tk.Label(root, text="")
 result_label.pack(side=tk.LEFT, padx=10, pady=10)
+
+
+# Define a function to clear the input fields
+def clear_inputs():
+    source_menu.delete(0, tk.END)
+    dest_menu.delete(0, tk.END)
+    
+# Create a button for clearing the inputs
+clear_button = tk.Button(root, text="Clear", font=font_style, width=10, height=2, command=clear_inputs)
+clear_button.pack(side=tk.BOTTOM, padx=10, pady=10)
 
 root.mainloop()
