@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import ttk
+import math
 import heapq
 
 # Create a dictionary to store the city names
@@ -9,18 +11,32 @@ city_names = {
     'D': 'Masvingo',
     'E': 'Gweru',
     'F': 'Kwekwe',
-    'G': 'Chinhoyi'
+    'G': 'Chinhoyi',
+    'H': 'Kadoma',
+    'J': 'Zvishavane',
+    'K': 'Marondera',
+    'L': 'Rusape',
+    'M': 'Beitbridge',
+    'N': 'Chiredzi',
+    'P': 'Birchenough Bridge'
 }
 
 # Create the graph
 graph = {
-    'A': [('B', 100), ('C', 50)],
-    'B': [('A', 100), ('D', 200), ('E', 75)],
-    'C': [('A', 50), ('D', 125)],
-    'D': [('B', 200), ('C', 125), ('E', 75)],
-    'E': [('B', 75), ('D', 75), ('F', 125), ('G', 200)],
-    'F': [('E', 125), ('G', 75)],
-    'G': [('E', 200), ('F', 75)]
+    'A': [('D', 295), ('G', 116), ('H', 142), ('K', 75)],
+    'B': [('M', 323), ('J', 184), ('E', 162)],
+    'C': [('P', 127), ('L', 93), ('K', 189)],
+    'D': [('M', 290), ('N', 204), ('P', 170), ('J', 97), ('A', 295), ('F', 200), ('E', 183)],
+    'E': [('B', 162), ('D', 183), ('F', 66), ('J', 119)],
+    'F': [('E', 66), ('H', 74), ('D', 200)],
+    'G': [('A', 116), ('H', 126)],
+    'H': [('A', 142), ('G', 126), ('F', 74)],
+    'J': [('B', 184), ('D', 97), ('E', 119), ('M', 335)],
+    'K': [('A', 75), ('C', 189), ('L', 96)],
+    'L': [('C', 93), ('K', 96)],
+    'M': [('B', 323), ('D', 290), ('N', 246), ('J', 335)],
+    'N': [('P', 197), ('M', 246), ('D', 204)],
+    'P': [('C', 127), ('D', 170), ('N', 197)]
 }
 
 # Define the dijkstra function
@@ -74,7 +90,7 @@ root.title("Shortest Path Finder")
 
 # Set the window size and position
 root.geometry("800x600")
-root.resizable(width=False, height=False)
+root.resizable(width=True, height=True)
 
 # Set the background color
 root.configure(bg="lightblue")
@@ -140,7 +156,45 @@ find_button.pack(side=tk.LEFT, padx=10, pady=10)
 result_label = tk.Label(root, text="")
 result_label.pack(side=tk.LEFT, padx=10, pady=10)
 
+# typing part
+# Create a label for the source input
+source_label = tk.Label(root, text="Source:", font=font_style, bg='lightgray')
+source_label.pack(side=tk.LEFT, padx=10, pady=10)
 
+# Create an entry field for the source input
+source_entry = tk.Entry(root, font=font_style, width=10)
+source_entry.pack(side=tk.LEFT, padx=10, pady=10)
+
+# Create a label for the destination input
+destination_label = tk.Label(root, text="Destination:", font=font_style, bg='lightgray')
+destination_label.pack(side=tk.LEFT, padx=10, pady=10)
+
+# Create an entry field for the destination input
+destination_entry = tk.Entry(root, font=font_style, width=10)
+destination_entry.pack(side=tk.LEFT, padx=10, pady=10)
+
+# Bind the Enter key to the submit button
+def submit_on_enter(event):
+    submit_inputs()
+
+root.bind('<Return>', submit_on_enter)
+
+# Create a function to handle the submit button click
+def submit_inputs():
+    # Get the source and destination inputs
+    source = source_entry.get()
+    destination = destination_entry.get()
+    
+    # Find the shortest path and distance between the source and destination
+    path, distance = find_shortest_path(source, destination)
+    
+    # Create a label to display the path and distance
+    result_label = tk.Label(root, text=f"Shortest path: {' -> '.join(path)}\nDistance: {distance} km", font=font_style, bg='lightgray')
+    result_label.pack(pady=20)
+
+# Create a submit button
+submit_button = ttk.Button(root, text="Find Shortest Path", command=submit_inputs)
+submit_button.pack(side=tk.BOTTOM, pady=20)
 # Define a function to clear the input fields
 def clear_inputs():
     source_menu.delete(0, tk.END)
