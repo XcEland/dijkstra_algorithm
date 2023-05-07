@@ -70,7 +70,7 @@ class Application:
         self.start_var.set('Harare')
         self.start_dropdown = ttk.Combobox(self.window, textvariable=self.start_var)
         self.start_dropdown['values'] = list(self.graph.vertices.keys())
-        self.start_dropdown.grid(column=1, row=0)
+        self.start_dropdown.grid(column=1, row=0, columnspan=2, sticky="ew")
 
         # End city dropdown
         self.end_label = ttk.Label(self.window, text="End City")
@@ -79,7 +79,7 @@ class Application:
         self.end_var.set('Harare')
         self.end_dropdown = ttk.Combobox(self.window, textvariable=self.end_var)
         self.end_dropdown['values'] = list(self.graph.vertices.keys())
-        self.end_dropdown.grid(column=1, row=1)
+        self.end_dropdown.grid(column=1, row=1, columnspan=2, sticky="ew")
 
         # Find path button
         self.button = ttk.Button(self.window, text="Find Shortest Path", command=self.calculate_shortest_path)
@@ -100,7 +100,7 @@ class Application:
 
         # Canvas for drawing the graph
         self.canvas = tk.Canvas(self.window, width=self.canvas_width, height=self.canvas_height)
-        self.canvas.grid(column=2, row=0, rowspan=3)
+        self.canvas.grid(column=0, row=3, columnspan=3, rowspan=3)
 
     def calculate_shortest_path(self):
         start = self.start_var.get()
