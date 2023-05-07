@@ -1,4 +1,22 @@
+# Import the Tkinter library for the GUI
+import tkinter as tk
+from tkinter import ttk
 import math
+
+# Create a dictionary to store the city names
+city_names = {
+    'A': 'Harare',
+    'B': 'Bulawayo',
+    'C': 'Mutare',
+    'D': 'Masvingo',
+    'E': 'Gweru',
+    'F': 'Kwekwe',
+    'G': 'Chinhoyi',
+    'H': 'Kadoma',
+    'I': 'Zvishavane',
+    'J': 'Marondera'
+}
+
 
 class Graph:
     def __init__(self):
@@ -27,6 +45,8 @@ class Graph:
                     current_distance = distances[vertex]
             visited.add(current_vertex)
             for neighbor, weight in self.vertices[current_vertex].items():
+                global 
+                distance
                 distance = current_distance + weight
                 if distance < distances[neighbor]:
                     distances[neighbor] = distance
@@ -68,10 +88,6 @@ zimbabwe.add_edge("G", "J", 70)
 zimbabwe.add_edge("H", "I", 50)
 zimbabwe.add_edge("I", "J", 30)
 
-# Import the Tkinter library for the GUI
-import tkinter as tk
-from tkinter import ttk
-
 # Create the main window
 root = tk.Tk()
 
@@ -89,56 +105,58 @@ font_style = ("Arial", 18)
 # Create a header label
 header_label = tk.Label(root, text="Shortest Path Finder", font=font_style, bg='lightgray')
 header_label.pack(pady=20)
-
-# Create a label for the source input
-source_label = tk.Label(root, text="Source:", font=font_style, bg='lightgray')
+#try 
+# Create the source city label and combo box
+source_label = tk.Label(root, text="Source City:")
 source_label.pack(side=tk.LEFT, padx=10, pady=10)
+source_entry = tk.StringVar(root)
+source_entry.set('Harare')
+source_combo = tk.ttk.Combobox(root, textvariable=source_entry, values=list(city_names.values()))
+source_combo.pack(side=tk.LEFT, padx=10, pady=10)
 
-# Create an entry field for the source input
-source_entry = tk.Entry(root, font=font_style, width=10)
-source_entry.pack(side=tk.LEFT, padx=10, pady=10)
+# Create the destination city label and combo box
+dest_label = tk.Label(root, text="Destination City:")
+dest_label.pack(side=tk.LEFT, padx=10, pady=10)
+destination_entry = tk.StringVar(root)
+destination_entry.set('Bulawayo')
+dest_combo = tk.ttk.Combobox(root, textvariable=destination_entry, values=list(city_names.values()))
+dest_combo.pack(side=tk.LEFT, padx=10, pady=10)
 
-# Create a label for the destination input
-destination_label = tk.Label(root, text="Destination:", font=font_style, bg='lightgray')
-destination_label.pack(side=tk.LEFT, padx=10, pady=10)
-
-# Create an entry field for the destination input
-destination_entry = tk.Entry(root, font=font_style, width=10)
-destination_entry.pack(side=tk.LEFT, padx=10, pady=10)
-
-# Create a button for submitting the inputs
-submit_button = tk.Button(root, text="Submit", font=font_style, width=10, height=2)
-submit_button.pack(side=tk.LEFT, padx=10, pady=10)
-
-# Create a button for clearing the inputs
-def clear_inputs():
-    source_entry.delete(0, tk.END)
-    destination_entry.delete(0, tk.END)
-
-clear_button = tk.Button(root, text="Clear", font=font_style, width=10, height=2, command=clear_inputs)
-clear_button.pack(side=tk.LEFT, padx=10, pady=10)
-
-# Create a label for the key
-key_label = tk.Label(root, text="Key: A=Harare, B=Bulawayo, C=Mutare, D=Gweru, E=Kwekwe, F=Masvingo, G=Chinhoyi, H=Mutoko, I=Hwange, J=Victoria Falls", font=font_style, bg='lightgray')
-key_label.pack(pady=20)
+#try/ 
 
 # Define a function to handle the submit button click
 def submit_inputs():
-    start = source_entry.get().upper()
-    end = destination_entry.get().upper()
-    if start not in zimbabwe.vertices or end not in zimbabwe.vertices:
+    start = None
+    end = None
+    
+    # Get the source and destination cities from the dropdown menus
+    for key, value in city_names.items():
+        if value == source_entry.get():
+            start = key
+        if value == destination_entry.get():
+            end = key
+            
+    # Find the shortest path and display it
+    shortest_path = zimbabwe.shortest_path(start, end)
+    if start not in zimbabwe.vertices:
+        result_label.config(text="Please enter valid source")
+    elif end not in zimbabwe.vertices:
+        result_label.config(text="Please enter valid destination")
+    elif start not in zimbabwe.vertices and end not in zimbabwe.vertices:
         result_label.config(text="Please enter valid source and destination")
     else:
-        path, distance = zimbabwe.shortest_path(start, end)
+        path, distance = shortest_path(start, end)
         path_str = " -> ".join(path)
+        # path_str = ' -> '.join([city_names[vertex] for vertex in shortest_path])
         result_label.config(text=f"Shortest path: {path_str} ({distance} km)")
 
 # Assign the submit_inputs() function to the submit button
+submit_button = tk.Button(root, text="Find Shortest Path", command=submit_inputs)
+submit_button.pack(side=tk.RIGHT, padx=10, pady=10)
 submit_button.config(command=submit_inputs)
-
 # Create a label for displaying the results
 result_label = tk.Label(root, text="", font=font_style, bg='lightgray')
-result_label.pack(pady=20)
+result_label.pack(side=tk.LEFT, pady=20)
 
 # Start the main event loop
 root.mainloop()

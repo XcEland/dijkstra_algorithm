@@ -27,15 +27,15 @@ city_names = {
 graph = {
     'A': [('D', 295), ('G', 116), ('H', 142), ('K', 75)],
     'B': [('M', 323), ('J', 184), ('E', 162)],
-    'C': [('P', 127), ('L', 93), ('K', 189)],
-    'D': [('M', 290), ('N', 204), ('P', 170), ('J', 97), ('A', 295), ('F', 200), ('E', 183)],
+    'C': [('P', 127), ('L', 92.6), ('K', 189)],
+    'D': [('M', 290), ('N', 204), ('P', 170), ('J', 97.1), ('A', 295), ('F', 200), ('E', 183)],
     'E': [('B', 162), ('D', 183), ('F', 66), ('J', 119)],
-    'F': [('E', 66), ('H', 74), ('D', 200)],
+    'F': [('E', 66), ('H', 74.2), ('D', 200)],
     'G': [('A', 116), ('H', 126)],
-    'H': [('A', 142), ('G', 126), ('F', 74)],
-    'J': [('B', 184), ('D', 97), ('E', 119), ('M', 335)],
+    'H': [('A', 142), ('G', 126), ('F', 74.2)],
+    'J': [('B', 184), ('D', 97.1), ('E', 119), ('M', 335)],
     'K': [('A', 75), ('C', 189), ('L', 96)],
-    'L': [('C', 93), ('K', 96)],
+    'L': [('C', 92.6), ('K', 96)],
     'M': [('B', 323), ('D', 290), ('N', 246), ('J', 335)],
     'N': [('P', 197), ('M', 246), ('D', 204)],
     'P': [('C', 127), ('D', 170), ('N', 197)]
@@ -75,6 +75,7 @@ def dijkstra(graph, start, end):
 
         # If we haven't reached the end vertex yet, visit its neighbors
         for neighbor, distance in graph[current_vertex]:
+            global new_distance
             new_distance = current_distance + distance
 
             # If we have found a shorter path to the neighbor vertex, update its distance
@@ -139,11 +140,11 @@ def find_shortest_path():
     shortest_path = dijkstra(graph, start, end)
     if shortest_path:
         path_str = ' -> '.join([city_names[vertex] for vertex in shortest_path])
-        result_label.config(text=f"Shortest path: {path_str}")
+        result_label.config(text=f"Shortest path: {path_str} ({new_distance} km)")
     else:
         result_label.config(text="No path found")
 
-find_button = tk.Button(root, text="Find Shortest Path", command=find_shortest_path)
+find_button = tk.Button(root, text="Calculate", command=find_shortest_path)
 find_button.pack(side=tk.RIGHT, padx=10, pady=10)
 
 # Create the label to display the result

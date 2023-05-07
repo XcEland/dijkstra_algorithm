@@ -4,7 +4,7 @@ import networkx as nx
 # Create a graph object
 G = nx.Graph()
 
-# Add nodes for 10 cities
+# Add nodes for 14 cities
 cities = ['A', 'B', 'C', 'D', 'E', 'F', 'H', 'J', 'K', 'L', 'M', 'N', 'P']
 G.add_nodes_from(cities)
 
@@ -28,6 +28,7 @@ G.add_edges_from(edges)
 
 # Draw the graph
 nx.draw_networkx(G, with_labels=True)
+
 
 # Show the plot
 plt.show()

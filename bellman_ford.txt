@@ -1,0 +1,20 @@
+      ------> B---- -1 --- > E
+     /         |           /|
+    6          -2         3 |
+ /             |  _____/    |
+A----4---->   C /           3         
+\             ^             |
+ 5            | -2          |
+   \          |            \/
+        >     D --- -1 ---->F
+1. choose the source
+AB AC AD BE CE CB DC DA EF
+2. 
+if d(u) + c(uv) < d(u)
+d(v) = d(u) + c(uv) 
+
+3. iterate n-1 times, where n is the number of nodes
+
+define an adjacent list using a library
+bellman-ford, dijkstra function (break down the code) [20-]
+
