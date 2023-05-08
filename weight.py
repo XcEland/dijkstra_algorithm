@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 # Add nodes for 14 cities
 cities = ['A', 'B', 'C', 'D', 'E', 'F', 'H', 'J', 'K', 'L', 'M', 'N', 'P']
 
-# Define the distances between cities as edges and their weights
-# edges = [('A', 'B', 10), ('A', 'C', 8), ('B', 'C', 5), ('B', 'D', 12), ('C', 'D', 6), ('C', 'E', 7), ('D', 'E', 3)]
-
 # Define the edges between the cities
 edges = [('A', 'G', 116),('A', 'H', 142),('A', 'K', 75),('A', 'D', 295) , 
          ('B', 'E', 162),('B', 'J', 184),('B', 'M', 323),

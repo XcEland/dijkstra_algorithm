@@ -1,185 +1,183 @@
-import heapq
+# Import modules
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+import math
+import heapq
 
-# Define the Graph as a dictionary of dictionaries
-graph = {
-    'A': {'B': 350, 'C': 270},
-    'B': {'A': 350, 'C': 200, 'D': 180, 'E': 240},
-    'C': {'A': 270, 'B': 200, 'F': 300},
-    'D': {'B': 180},
-    'E': {'B': 240, 'G': 400},
-    'F': {'C': 300},
-    'G': {'E': 400},
+# Create a dictionary to store the city names
+city_names = {
+    'A': 'Harare',
+    'B': 'Gweru',
+    'C': 'Mutare',
+    'D': 'Masvingo',
+    'E': 'Bulawayo',
+    'H': 'Beitbridge',
+    'Z': 'Zvishavane'   
 }
 
-# Define a function to find the shortest path between two cities
-def find_shortest_path(graph, start, end):
-    # Initialize the heap and visited set
-    heap = [(0, start)]  # A heap to store the vertices and their distance
-    visited = set()     # A set to store the visited vertices
-    
-    # Initialize the distances dictionary
-    distances = {vertex: float('inf') for vertex in graph}
-    distances[start] = 0
-    
-    # Loop until the heap is empty
-    while heap:
-        # Pop the smallest item from the heap
-        (current_distance, current_vertex) = heapq.heappop(heap)
-
-        # If we have already visited this vertex, continue to the next iteration
-        if current_vertex in visited:
-            continue
-
-        # Mark the current vertex as visited
-        visited.add(current_vertex)
-
-        # Update distances and add unvisited neighbors to the heap
-        for neighbor, weight in graph[current_vertex].items():
-            new_distance = current_distance + weight
-            if new_distance < distances[neighbor]:
-                distances[neighbor] = new_distance
-                heapq.heappush(heap, (new_distance, neighbor))
-
-    # Return the shortest path as a list of vertices
-    path = []
-    current_vertex = end
-    while current_vertex != start:
-        path.insert(0, current_vertex)
-        current_vertex = min(
-            [(vertex, distances[vertex]) for vertex in graph[current_vertex] if vertex in visited],
-            key=lambda x: x[1])[0]
-    path.insert(0, start)
-    
-    # Return the shortest path and its distance
-    return path, distances[end]
-
-# Test the function by finding the shortest path between 'Harare' (A) and 'Chinhoyi' (G)
-start_city = 'A'
-end_city = 'G'
-city_key = {'A': 'Harare', 'B': 'Bulawayo', 'C': 'Mutare', 'D': 'Gweru', 'E': 'Masvingo', 'F': 'Bindura', 'G': 'Chinhoyi'}
-shortest_path, distance = find_shortest_path(graph, start_city, end_city)
-
-# Print the results
-start_city_name = city_key[start_city]
-end_city_name = city_key[end_city]
-print(f"The shortest path from {start_city_name} to {end_city_name} is {shortest_path}, with a distance of {distance} kilometers.")
-
-
-
-
-
-#Define the Graph as a dictionary of dictionaries
+# Create the graph
 graph = {
-    'A': {'B': 350, 'C': 270},
-    'B': {'A': 350, 'C': 200, 'D': 180, 'E': 240},
-    'C': {'A': 270, 'B': 200, 'F': 300},
-    'D': {'B': 180},
-    'E': {'B': 240, 'G': 400},
-    'F': {'C': 300},
-    'G': {'E': 400},
+    'A': [('D', 295), ('C', 216)],
+    'B': [('C', 261), ('D', 183), ('E', 162), ('Z', 119)],
+    'C': [('A', 116), ('B', 261)],
+    'D': [('B', 183), ('A', 295), ('H', 290), ('Z', 97.1)],
+    'E': [('B', 162), ('Z', 184), ('H', 323)],
+    'H': [('E', 323), ('D', 290), ('Z', 335)],
+    'Z': [('B', 119), ('D', 97.1), ('E', 184), ('H', 335)]
 }
 
-# Define a function to find the shortest path between two cities
-def find_shortest_path(graph, start, end):
-    # Initialize the heap and visited set
-    heap = [(0, start)]  # A heap to store the vertices and their distance
-    visited = set()     # A set to store the visited vertices
-    
-    # Initialize the distances dictionary
-    distances = {vertex: float('inf') for vertex in graph}
+# Define the dijkstra function
+def dijkstra(graph, start, end):
+    # ...
+    # Create a dictionary to store the distance to each vertex
+    distances = {vertex: float('infinity') for vertex in graph}
     distances[start] = 0
-    
-    # Loop until the heap is empty
-    while heap:
-        # Pop the smallest item from the heap
-        (current_distance, current_vertex) = heapq.heappop(heap)
 
-        # If we have already visited this vertex, continue to the next iteration
-        if current_vertex in visited:
-            continue
+    # Create a dictionary to store the previous vertex in the path
+    previous_vertices = {
+        vertex: None for vertex in graph
+    }
 
-        # Mark the current vertex as visited
-        visited.add(current_vertex)
+    # Create a priority queue to store vertices that need to be visited
+    priority_queue = [(0, start)]
 
-        # Update distances and add unvisited neighbors to the heap
-        for neighbor, weight in graph[current_vertex].items():
-            new_distance = current_distance + weight
+    while len(priority_queue) > 0:
+        # Get the vertex with the smallest distance from the priority queue
+        current_distance, current_vertex = heapq.heappop(priority_queue)
+
+        # If we have already found a shorter path to the end vertex, we can stop
+        if current_vertex == end:
+            path = []
+
+            # Follow the previous_vertices dictionary to build the shortest path
+            while previous_vertices[current_vertex] is not None:
+                path.append(current_vertex)
+                current_vertex = previous_vertices[current_vertex]
+
+            # Add the start vertex to the path and return it in reverse order
+            path.append(start)
+            return path[::-1]
+
+        # If we haven't reached the end vertex yet, visit its neighbors
+        for neighbor, distance in graph[current_vertex]:
+            global new_distance
+            new_distance = current_distance + distance
+
+            # If we have found a shorter path to the neighbor vertex, update its distance
             if new_distance < distances[neighbor]:
                 distances[neighbor] = new_distance
-                heapq.heappush(heap, (new_distance, neighbor))
+                previous_vertices[neighbor] = current_vertex
+                heapq.heappush(priority_queue, (new_distance, neighbor))
 
-    # Return the shortest path as a list of vertices
-    path = []
-    current_vertex = end
-    while current_vertex != start:
-        path.insert(0, current_vertex)
-        current_vertex = min(
-            [(vertex, distances[vertex]) for vertex in graph[current_vertex] if vertex in visited],
-            key=lambda x: x[1])[0]
-    path.insert(0, start)
-    
-    # Return the shortest path and its distance
-    return path, distances[end]
+    # If we have visited all the vertices and haven't found the end vertex, there is no path
+    return None
 
-# Define a function to find the shortest path between two cities based on user input
-def find_shortest_path_ui(start_city, end_city):
-    # Convert city names to corresponding vertices in the graph
-    vertices_key = {v: k for k, v in city_key.items()}
-    start_vertex = vertices_key[start_city]
-    end_vertex = vertices_key[end_city]
-    
-    # Find the shortest path and its distance
-    shortest_path, distance = find_shortest_path(graph, start_vertex, end_vertex)
-    
-    # Convert vertex names back to city names
-    shortest_path_city = [city_key[vertex] for vertex in shortest_path]
-    
-    # Print and return the results
-    print(f"The shortest path from {start_city} to {end_city} is {shortest_path_city}, with a distance of {distance} kilometers.")
-    return shortest_path_city
-
-# Define a list of cities to use as a drop-down menu for the user interface
-cities = ['Harare', 'Bulawayo', 'Mutare', 'Gweru', 'Masvingo', 'Bindura', 'Chinhoyi']
-
-# Define a dictionary to convert between city names and vertices
-city_key = {'A': 'Harare', 'B': 'Bulawayo', 'C': 'Mutare', 'D': 'Gweru', 'E': 'Masvingo', 'F': 'Bindura', 'G': 'Chinhoyi'}
-
-# Define the user interface
-# @interact(start=Dropdown(options=cities, description='Start city: '), 
-#           end=Dropdown(options=cities, description='End city: '))
-# def shortest_path_ui(start, end):
-#     shortest_path_city = find_shortest_path_ui(start, end)
-#     return shortest_path_city
-
-# Create the Tkinter GUI
+# Create the GUI
 root = tk.Tk()
-root.title("Shortest Distance between Zimbabwean Cities")
+root.title("Shortest Path Finder")
+
+# Set the window size and position
+root.geometry("800x600")
+root.resizable(width=True, height=True)
+
+# Set the background color
+root.configure(bg="lightblue")
+
+# Define the font and size for the text and buttons
+font_style = ("Arial", 18)
+
+# Add a header with the author's name
+header_label = tk.Label(root, text="Shortest Path Between Cities", font=("Arial", 24), bg="white")
+header_label.pack(pady=20)
+
+author_label = tk.Label(root, text="Felistas", font=("Arial", 18), bg="white")
+author_label.pack()
+
+# Create a frame to hold the canvas and buttons
+frame = tk.Frame(root)
+frame.pack(side=tk.BOTTOM, pady=20)
+
+# Create the canvas to draw the graph
+canvas = tk.Canvas(root, width=600, height=500, bg="white")
+canvas.pack(side=tk.TOP, padx=20, pady=20)
+
+# Create a dictionary to store the coordinates of the nodes
+node_coords = {
+    'A': (100, 100),
+    'B': (200, 200),
+    'C': (300, 100),
+    'D': (100, 300),
+    'E': (400, 200),
+    'H': (500, 100),
+    'Z': (500, 300)
+}
+
+# Draw the nodes of the graph
+node_radius = 20
+for node, coord in node_coords.items():
+    x, y = coord
+    canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="lightgray")
+    canvas.create_text(x, y, text=city_names[node], font=font_style)
+
+# Draw the edges of the graph
+for node, edges in graph.items():
+    x1, y1 = node_coords[node]
+    for edge, distance in edges:
+        x2, y2 = node_coords[edge]
+        canvas.create_line(x1, y1, x2, y2)
 
 # Create the source city label and combo box
-source_label = tk.Label(root, text="Source City:")
-source_label.grid(row=0, column=0, padx=5, pady=5)
-source_var = tk.StringVar() 
-source_var.set('A')
-source_combo = tk.OptionMenu(root, source_var, *list(city_key.keys()))
-source_combo.grid(row=0, column=1, padx=5, pady=5)
+source_label = tk.Label(frame, text="Start City:")
+source_label.pack(side=tk.LEFT, padx=10, pady=10)
+source_var = tk.StringVar(root)
+source_var.set('Harare')
+source_combo = tk.ttk.Combobox(frame, textvariable=source_var, values=list(city_names.values()))
+source_combo.pack(side=tk.LEFT, padx=10, pady=10)
 
 # Create the destination city label and combo box
-destination_label = tk.Label(root, text="Destination City:")
-destination_label.grid(row=1, column=0, padx=5, pady=5)
-destination_var = tk.StringVar()
-destination_var.set('B')
-destination_combo = tk.OptionMenu(root, destination_var, *list(city_key.keys()))
-destination_combo.grid(row=1, column=1, padx=5, pady=5)
+dest_label = tk.Label(frame, text="Destination City:")
+dest_label.pack(side=tk.LEFT, padx=10, pady=10)
+dest_var = tk.StringVar(root)
+dest_var.set('Bulawayo')
+dest_combo = tk.ttk.Combobox(frame, textvariable=dest_var, values=list(city_names.values()))
+dest_combo.pack(side=tk.LEFT, padx=10, pady=10)
 
-# Create the calculate button
-# calculate_button = tk.Button(root, text="Calculate", command=calculate_distance)
-# calculate_button.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
+# Create the button to find the shortest path
+def find_shortest_path():
+    start = None
+    end = None
 
-# Create the result label
-result_label = tk.Label(root, text="")
-result_label.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+    # Get the source and destination cities from the dropdown menus
+    for key, value in city_names.items():
+        if value == source_var.get():
+            start = key
+        if value == dest_var.get():
+            end = key
+
+    # Find the shortest path and display it
+    shortest_path = dijkstra(graph, start, end)
+    if shortest_path:
+        path_str = ' -> '.join([city_names[vertex] for vertex in shortest_path])
+        result_label.config(text=f"Shortest path: {path_str} ({new_distance} km)")
+
+        # Highlight the shortest path on the graph
+        canvas.delete("highlight")
+        for i in range(len(shortest_path) - 1):
+            node1 = shortest_path[i]
+            node2 = shortest_path[i+1]
+            x1, y1 = node_coords[node1]
+            x2, y2 = node_coords[node2]
+            canvas.create_line(x1, y1, x2, y2, width=3, fill="blue", tags="highlight")
+    else:
+        result_label.config(text="No path found")
+        canvas.delete("highlight")
+
+find_button = tk.Button(frame, text="Calculate", command=find_shortest_path)
+find_button.pack(side=tk.RIGHT, padx=10, pady=10)
+
+# Create the label to display the result
+result_label = tk.Label(frame, text="")
+result_label.pack(side=tk.RIGHT, padx=10, pady=10)
 
 root.mainloop()
